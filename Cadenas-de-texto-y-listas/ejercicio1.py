@@ -14,7 +14,9 @@ def pais(prfx):
 # --------------------------------------------
 def get_prefix(char_set):
     prfx=char_set[:3]
+    num_tlfn=char_set[3:]
     print(f"Tu prefijo es: {prfx}")
+    print(f"Tu número de teléfono es: {num_tlfn}")
     pais(prfx)
 # ---------------------------------------------
 tlfn=(input("Introduce tu número de teléfono completo (prefijo y signo '+' incluídos): "))
