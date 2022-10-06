@@ -26,6 +26,9 @@ elif extnsn == ".mp4" | extnsn == ".avi" | extnsn == ".mkv":
 
 elif extnsn == ".deb":
     print("El archivo introducido es un paquete de Debian.")
+
+elif extnsn == ".txt":
+    print("El archivo introducido es un archivo de texto.")
     
 else:
     print("Tipo de archivo desconocido.")
