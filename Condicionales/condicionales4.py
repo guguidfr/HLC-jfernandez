@@ -1,7 +1,7 @@
 # José Daniel Fernández López
 # 05/10/2022
 # Comprobar tipo de archivo
-file_path=input("Introduce el nombre de un archivo o su ruta: ")
+file_path=input("Introduce el nombre completo de un archivo o su ruta: ")
 extnsn=file_path[file_path.find("."):]
 if extnsn == ".pdf":
     print("El archivo introducido es un PDF.")
