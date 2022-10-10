@@ -7,7 +7,7 @@ def user_input():
     while salir == False:
         user_option=input("Eliges: ")
         if user_option !="1" and user_option !="2" and user_option !="3":
-            print("El número que has introducido no es válido. Vuelve a intentarlo.")
+            print("Lo que has introducido no es válido. Vuelve a intentarlo.")
         else:
             salir=True
     return user_option
