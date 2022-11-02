@@ -1,145 +1,150 @@
+# José Daniel Fernández López
+# 02/11/2022
+
 import random
 import time
 
-# Initial Steps to invite in the game:
-print("\nWelcome to Hangman game by IT SOURCECODE\n")
-name = input("Enter your name: ")
-print("Hello " + name + "! Best of Luck!")
-time.sleep(2)
-print("The game is about to start!\n Let's play Hangman!")
+print("Acabas de iniciar el juego del Ahorcado.")
+nombre=(input("Introduce tu nombre: "))
+time.sleep(1)
+print(f"\n¡Buena suerte {nombre}!")
+print("La partida va a empezar en breves...")
 time.sleep(3)
+print("\n")
 
+def play_again():
+    salir = False
+    while salir == False:
+        respuesta = input("¿Quieres jugar otra vez?[Y/N]: ")
+        if respuesta == "y" or respuesta == "Y":
+            salir = True
+            time.sleep(2)
+            main()
+        elif respuesta == "n" or respuesta == "N":
+            print(f"¡Gracias por jugar, {nombre}!")
+            time.sleep(1)
+            salir = True
+        else:
+            print("Lo que has introducido no es válido. Prueba otra vez.\n")
 
-# The parameters we require to execute the game:
+def partida():
+    estado_ahorcado = ['''
+      +---+
+      |   |
+          |
+          |
+          |
+          |
+    =========''', '''
+      +---+
+      |   |
+      O   |
+          |
+          |
+          |
+    =========''', '''
+      +---+
+      |   |
+      O   |
+      |   |
+          |
+          |
+    =========''', '''
+      +---+
+      |   |
+      O   |
+     /|   |
+          |
+          |
+    =========''', '''
+      +---+
+      |   |
+      O   |
+     /|\  |
+          |
+          |
+    =========''', '''
+      +---+
+      |   |
+      O   |
+     /|\  |
+     /    |
+          |
+    =========''', '''
+      +---+
+      |   |
+      O   |
+     /|\  |
+     / \  |
+          |
+    =========''']
+    global salida
+    global palabra_a_adivinar
+    global word_size
+    global letras_usadas
+    global palabra_sin_modificar
+    contador = 0
+    max_intentos = 7
+    palabra_adivinada = False
+    game_over = False
+    while palabra_adivinada == False and game_over == False:
+        letra_acertada = False
+        entrada_correcta = False
+        while entrada_correcta == False:
+            intento_usuario = input(f"Tu progreso con la palabra: {salida}\nLetras que has usado: {letras_usadas}\nIntroduce una letra: ")
+            intento_usuario = intento_usuario.strip().lower()
+            if len(intento_usuario) != 1:
+                print("La entrada no es válida. Debes de introducir solamente un carácter. Prueba otra vez.\n")
+            elif intento_usuario.isdigit():
+                print("Solamente se admiten letras. Prueba otra vez.\n")
+            elif intento_usuario in letras_usadas:
+                print("Ya has usado esa letra. Prueba con otra.\n")
+            else:
+                entrada_correcta = True
+        
+        for caracter in palabra_a_adivinar:
+            if intento_usuario == caracter:
+                if intento_usuario not in letras_usadas:
+                    letras_usadas.extend(intento_usuario)
+                letra_acertada = True
+                posicion = palabra_a_adivinar.find(intento_usuario)
+                palabra_a_adivinar = palabra_a_adivinar[:posicion] + "_" + palabra_a_adivinar[posicion+1:]
+                salida = salida[:posicion] + intento_usuario + salida[posicion+1:]      
+            else:
+                if intento_usuario not in letras_usadas:
+                    letras_usadas.extend(intento_usuario)
+        
+        if letra_acertada == False:
+            max_intentos-=1
+            contador+=1
+            if max_intentos == 0:
+                print(estado_ahorcado[6])
+                print(f"¡Has perdido, {nombre}!\nLa palabra era \"{palabra_sin_modificar}\".\nMejor suerte la próxima vez.")
+                game_over = True
+            else:
+                print("Esa letra no está en la palabra.")
+                print(estado_ahorcado[contador-1])
+                print(f"Intentos restantes: {max_intentos}\n")
+        else:
+            print(f"¡Letra correcta!\n")
+        
+        if palabra_a_adivinar == "_" * word_size:
+            print(f"¡Felicidades {nombre}!¡Has acertado la palabra: \"{palabra_sin_modificar}\"!")
+            palabra_adivinada = True
+
 def main():
-    global count
-    global display
-    global word
-    global already_guessed
-    global length
-    global play_game
-    words_to_guess = ["january","border","image","film","promise","kids","lungs","doll","rhyme","damage"
-                   ,"plants"]
-    word = random.choice(words_to_guess)
-    length = len(word)
-    count = 0
-    display = '_' * length
-    already_guessed = []
-    play_game = ""
-
-# A loop to re-execute the game when the first round ends:
-
-def play_loop():
-    global play_game
-    play_game = input("Do You want to play again? y = yes, n = no \n")
-    while play_game not in ["y", "n","Y","N"]:
-        play_game = input("Do You want to play again? y = yes, n = no \n")
-    if play_game == "y":
-        main()
-    elif play_game == "n":
-        print("Thanks For Playing! We expect you back again!")
-        exit()
-
-# Initializing all the conditions required for the game:
-def hangman():
-    global count
-    global display
-    global word
-    global already_guessed
-    global play_game
-    limit = 5
-    guess = input("This is the Hangman Word: " + display + " Enter your guess: \n")
-    guess = guess.strip()
-    if len(guess.strip()) == 0 or len(guess.strip()) >= 2 or guess <= "9":
-        print("Invalid Input, Try a letter\n")
-        hangman()
-
-
-    elif guess in word:
-        already_guessed.extend([guess])
-        print(f"La letra es: {already_guessed}")
-        index = word.find(guess)
-        word = word[:index] + "_" + word[index + 1:]
-        display = display[:index] + guess + display[index + 1:]
-        print(display + "\n")
-
-    elif guess in already_guessed:
-        print("Try another letter.\n")
-
-    else:
-        count += 1
-
-        if count == 1:
-            time.sleep(1)
-            print("   _____ \n"
-                  "  |      \n"
-                  "  |      \n"
-                  "  |      \n"
-                  "  |      \n"
-                  "  |      \n"
-                  "  |      \n"
-                  "__|__\n")
-            print("Wrong guess. " + str(limit - count) + " guesses remaining\n")
-
-        elif count == 2:
-            time.sleep(1)
-            print("   _____ \n"
-                  "  |     | \n"
-                  "  |     |\n"
-                  "  |      \n"
-                  "  |      \n"
-                  "  |      \n"
-                  "  |      \n"
-                  "__|__\n")
-            print("Wrong guess. " + str(limit - count) + " guesses remaining\n")
-
-        elif count == 3:
-           time.sleep(1)
-           print("   _____ \n"
-                 "  |     | \n"
-                 "  |     |\n"
-                 "  |     | \n"
-                 "  |      \n"
-                 "  |      \n"
-                 "  |      \n"
-                 "__|__\n")
-           print("Wrong guess. " + str(limit - count) + " guesses remaining\n")
-
-        elif count == 4:
-            time.sleep(1)
-            print("   _____ \n"
-                  "  |     | \n"
-                  "  |     |\n"
-                  "  |     | \n"
-                  "  |     O \n"
-                  "  |      \n"
-                  "  |      \n"
-                  "__|__\n")
-            print("Wrong guess. " + str(limit - count) + " last guess remaining\n")
-
-        elif count == 5:
-            time.sleep(1)
-            print("   _____ \n"
-                  "  |     | \n"
-                  "  |     |\n"
-                  "  |     | \n"
-                  "  |     O \n"
-                  "  |    /|\ \n"
-                  "  |    / \ \n"
-                  "__|__\n")
-            print("Wrong guess. You are hanged!!!\n")
-            print("The word was:",already_guessed,word)
-            play_loop()
-
-    if word == '_' * length:
-        print("Congrats! You have guessed the word correctly!")
-        play_loop()
-
-    elif count != limit:
-        hangman()
-
+    global salida
+    global palabra_a_adivinar
+    global word_size
+    global letras_usadas
+    global palabra_sin_modificar
+    palabras_disponibles = ("punta","recital","gallo","lavadora","comer","maduro","cosechar","biplano","cosecha","luminoso","curva","retirar","principio","digital","planetas","broma","caracol","patata")
+    palabra_a_adivinar = random.choice(palabras_disponibles)
+    palabra_sin_modificar = palabra_a_adivinar
+    word_size = len(palabra_a_adivinar)
+    letras_usadas = []
+    salida = "_" * word_size
+    partida()
+    play_again()
 
 main()
-
-
-hangman()
