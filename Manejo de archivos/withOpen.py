@@ -1,4 +1,6 @@
 # Leer línea a línea
+# José Daniel Fernández López
+# 03/011/2022
 with open("./Manejo de archivos/tabla_multiplicar_5.txt","r") as f:
     contador = 1
     for linea in f:

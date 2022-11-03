@@ -1,4 +1,5 @@
-import io
+# José Daniel Fernández López
+# 03/011/2022
 def create_table():
     entrada_correcta = False
     while entrada_correcta == False:

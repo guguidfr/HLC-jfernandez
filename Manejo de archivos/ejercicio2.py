@@ -1,4 +1,5 @@
-import io
+# José Daniel Fernández López
+# 03/011/2022
 def obtener_tabla(tabla_elegida):
     try:
         file = open(f"./Manejo de archivos/tabla_multiplicar_{tabla_elegida}.txt","r")

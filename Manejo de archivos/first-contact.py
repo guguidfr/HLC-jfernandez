@@ -1,4 +1,5 @@
-import io
+# José Daniel Fernández López
+# 03/011/2022
 f = open("./Manejo de archivos/file.txt", "w") # Abrir en modo escritura
 f.write("Hola Mundo")
 f.write("\nHasta luego")
