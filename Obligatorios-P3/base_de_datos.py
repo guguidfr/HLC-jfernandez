@@ -27,12 +27,12 @@ class Database:
                 self.content.append(line)
 
     def get_register(self, ref_key, search):
-        # if ref_key=="ID" or ref_key=="N-Horas":
-        #     search = int(search)
         for register in self.content:
             if register[ref_key]==search:
                 print(register)
-          
+                return register
+
 main_db = Database(source="./Obligatorios-P3/db.csv")
 main_db.load_db()
 main_db.get_register("Responsable","Miguel")
+print("alo")
