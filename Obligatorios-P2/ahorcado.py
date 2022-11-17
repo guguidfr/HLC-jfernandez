@@ -63,22 +63,22 @@ def partida():
       +---+
       |   |
       O   |
-     /|\  |
+     /|\\  |
           |
           |
     =========''', '''
       +---+
       |   |
       O   |
-     /|\  |
+     /|\\  |
      /    |
           |
     =========''', '''
       +---+
       |   |
       O   |
-     /|\  |
-     / \  |
+     /|\\  |
+     / \\  |
           |
     =========''']
     # Se declaran las variables necesarias para que funcione
@@ -91,6 +91,7 @@ def partida():
     max_intentos = 7 # Número de intentos que tiene el usuario
     palabra_adivinada = False # Condición de victoria
     game_over = False # Condición de derrota
+    intento_usuario = ""
     while palabra_adivinada == False and game_over == False: # Aquí empieza la partida de ahorcado, que termina cuando el jugador adivina la palabra, o se queda sin intentos
         letra_acertada = False # Condición que cambiará si el usuario introduce una letra que está en la palabra
         entrada_correcta = False # Cambiará si la entrada del usuario es válida
