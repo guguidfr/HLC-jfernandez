@@ -1,5 +1,7 @@
 # José Daniel Fernández López
 import csv
+import time
+import os
 class Database:
     def __init__(self, source, content=[]):
         self.source = source
@@ -10,6 +12,12 @@ class Database:
             reader = csv.DictReader(File,)
             for line in reader:
                 self.content.append(line)
+
+    def show_db(self):
+        for register in self.content:
+            for key in register:
+                print(f"{key} = {register[key]}")
+            print("--------------------------------------")
 
     def get_register(self, ref_key, search):
         local_list = []
@@ -54,7 +62,7 @@ class Database:
             valid_option = False      
             while valid_option == False:
                 # Obtener las keys y los valores del diccionario por separado
-                fields_keys_list = list(register.keys()) # type: ignore  -> Hace que pylance ignore los errores posibles en esta línea
+                fields_keys_list = ["ID","Titulo","Responsable","DNI-Responsable","N-Horas"] # type: ignore  -> Hace que pylance ignore los errores posibles en esta línea
                 fields_values_list = list(register.values()) # type: ignore
                 field = 1
                 # Mostrar la información actual del registro seleccionado
@@ -106,15 +114,86 @@ class Database:
                     for db_register in self.content:
                                     if db_register == register_copy:
                                         db_register = register
+    
     def new_entry(self):
-        print("Próximamente")
+        # Declaramos los campos que debe de rellenar el usuario
+        fields_keys_list = ["ID","Titulo","Responsable","DNI-Responsable","N-Horas"]
+        new_entry = {}
+        for key in fields_keys_list:
+            # Si es alguno de estos dos campos, que son numéricos, el usuario deberá de introducir un número
+            if key == "ID" or key == "N-Horas":
+                valid = False
+                while valid == False:
+                    try:
+                        new_entry[key] = int(input(f"Introduce el valor para \"{key}\": "))
+                    except ValueError:
+                        print("El valor introducido debe de ser un número entero.")
+                    except:
+                        print("Error inesperado.")
+                    else:
+                        valid = True
+            elif key == "DNI-Responsable": # Cuando se vaya a rellenar el DNI, se pasrá a mayúscula para que coincida con el resto de registros
+                new_entry[key] = input(f"Introduce el valor para \"{key}\": ").upper()
+            else: # Para el resto de campos, pasaremos siempre la primera letra a mayúsculas
+                new_entry[key] = input(f"Introduce el valor para \"{key}\": ").capitalize()
         
+        # Añadimos la nueva entrada a nuestra base de datos cargada en memoria
+        self.content.append(new_entry)
 
 main_db = Database(source="./Obligatorios-P3/db.csv")
 main_db.load_db()
-# output = main_db.get_register("Responsable","Miguel")
-# print(output)
-# main_db.delete_register("ID", "5")
-# main_db.edit_register("Responsable","Miguel")
-# for element in main_db.content:
-#     print(element)
+# --------------------------------------------------------------
+os.system('cls' if os.name == 'nt' else 'clear')
+print("Cargando base de datos.")
+time.sleep(0.7)
+os.system('cls' if os.name == 'nt' else 'clear')
+print("Cargando base de datos..")
+time.sleep(0.7)
+os.system('cls' if os.name == 'nt' else 'clear')
+print("Cargando base de datos...")
+time.sleep(0.7)
+os.system('cls' if os.name == 'nt' else 'clear')
+print("Cargando base de datos.")
+time.sleep(0.7)
+os.system('cls' if os.name == 'nt' else 'clear')
+print("Cargando base de datos..")
+time.sleep(0.7)
+os.system('cls' if os.name == 'nt' else 'clear')
+print("Cargando base de datos...")
+time.sleep(0.7)
+os.system('cls' if os.name == 'nt' else 'clear')
+# -------------------------------------------------------------
+user_choice = ""
+save_db = False
+exit_no_saving = False
+while save_db == False and exit_no_saving == False:
+    valid_entry = False
+    while valid_entry == False:
+        print("¿Qué es lo que quieres hacer?")
+        try:
+            user_choice = int(input("1. Imprimir la base de datos\n2. Obtener un registro\n3. Eliminar un registro\n4. Editar un registro\n 5.Añadir un nuevo registro \n6. Guardar y salir \n7. Salir sin guardar \n====> "))
+        except ValueError:
+            print("Debes de introducir un número.\n")
+        else:
+            if user_choice<0 or user_choice>7:
+                print("Debes de elegir el número de una de las opciones.\n")
+            else:
+                valid_entry = True
+    if user_choice == 1:
+        main_db.show_db()
+    elif user_choice == 2:
+        print("Los campos por lo que puedes filtrar son los siguientes:")
+        fields_keys_list = ["ID","Titulo","Responsable","DNI-Responsable","N-Horas"]
+        counter = 1
+        for i in fields_keys_list:
+            print(f"{counter} - {i}")
+            counter += 1
+        valid_field = False
+        while valid_field == False:
+            try:
+                field = int(input("¿Por cuál de los campos quieres filtrar?: "))
+            except ValueError:
+                print("Debes de introducir un número.")
+            else:
+                if field not in range(1,counter):
+                    pass
