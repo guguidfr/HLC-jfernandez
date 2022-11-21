@@ -8,6 +8,7 @@ import random
 
 # Haciendo divisiones y truncando los resultados, podemos obtener las unidades de millar, centenas y decenas
 # con facilidad.
+# lpaneque: Quizás los nombres de estas funciones no son los más adecuados.
 def get_A(num):
     resultado=num//1000
     return resultado
@@ -41,7 +42,7 @@ numero=random.randint(1000,9999)
 guessed=False
 num_intentos=0
 # Seguiremos pidiendo números al usuario hasta que adivine todos los dígitos a la vez
-while guessed==False:
+while guessed==False: # lpaneque: Mejor while not guessed
     got_A=False
     got_B=False
     got_C=False
@@ -77,7 +78,12 @@ while guessed==False:
         print(f"Has fallado en el segundo dígito por: +/-{(B-B2)*(-1)}.")
     elif (B-B2)>0:
         print(f"Has fallado en el segundo dígito por: +/-{(B-B2)}.")
-    
+   
+    # lpaneque: No sería más sencillo extraer cada dígito de la cifra y compararlo? También podrías convertirlo a integer para ver la diferencia entre ambos.
+    # Tu solución es perfectamente válida, pero puede resultar algo compleja de entender y lleva algo de repetición de código, ya que todos estos bloques son iguales, quitando el peso del dígito, decenas, centenas, etc.
+    # Lo podrías meter en un bucle.
+    # Según la filosofía ZEN de python: "Simple is better than complex."
+  
     C=get_C(numero,b)
     C2=get_C(user_try, b2)
     c=b+C*10
@@ -106,3 +112,5 @@ while guessed==False:
         print(f"¡Has acertado! El número es: {numero}")
         print(f"Has necesitado: {num_intentos} intentos.")
         guessed=True
+        
+ # lpaneque
