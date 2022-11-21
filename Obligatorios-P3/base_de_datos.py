@@ -14,22 +14,22 @@ class Database:
             for line in reader: # Leemos cada línea, y la añadimos a la lista
                 self.content.append(line)
 
-    def show_db(self):
+    def show_db(self): # Mostrar la base de datos entera al usuario
         for register in self.content:
             for key in register: # Para cada campo del registro, lo mostraremos junto con su valor
                 print(f"{key} = {register[key]}")
             print("--------------------------------------")
 
-    def get_register(self, ref_key, search):
+    def get_register(self, ref_key, search): # Obtenemos los registros que coinciden con la búsqueda del usuario, y devolvemos el que este elija
         local_list = [] # Inicializamos una lista vacía que existirá solamente dentro de este método
         for register in self.content:
             if register[ref_key].lower()==search.lower():
                 local_list.append(register) # Añadimos a la lista los registros que coincidan con los criterios de búsqueda
         if len(local_list) == 0: # Si la lista tiene 0 elementos, no hemos encontrado nada.
             print("No hay registros para la búsqueda realizada.")
-        elif len(local_list) == 1: # Si la lista con
+        elif len(local_list) == 1: # Si la lista contiene solamente un elemento, devolvemos ese.
             return local_list[0]
-        else:
+        else: # Si hay varias coincidencias, el usuario deberá de elegir con cuál trabajar.
             valid_option = False
             while valid_option == False:
                 print("Hay varias coincidencias para la búsqueda. Los resultado son: ")
@@ -39,20 +39,20 @@ class Database:
                     option += 1
                 try:    
                     selection = int(input(f"¿Cuál de los registros quieres elegir? [1-{len(local_list)}]: "))
-                except ValueError:
+                except ValueError: # Si el usuario introduce algo que no es un entero, deberá de volver de introducir algo
                     print(f"Debe de elegir un número entero entre 1 y {len(local_list)}.\n")
                 except:
                     print("Error inesperado.")
                 else:
-                    if selection > len(local_list):
+                    if selection > len(local_list) or selection < 0: # Si la entrada del usuario es negativa, o es mayor que el tamaño de nuestra lista local, la entrada no será válida
                         print("Elige una de las opciones posibles.\n")
-                    else:
+                    else: # Cuando la entrada sea válida, devolveremos el registro elegido
                         valid_option = True
                         return local_list[selection-1]
     
     def delete_register(self, ref_key, search):
         register = self.get_register(ref_key, search)
-        if register != None:
+        if register != None: # Si ha habido una coincidencia
             self.content.remove(register)
 
     def edit_register(self, ref_key, search):
@@ -248,6 +248,7 @@ while save_db == False and exit_no_saving == False:
         os.system('cls' if os.name == 'nt' else 'clear')
 
     elif user_choice == 6:
+        fields_keys_list = ["ID","Titulo","Responsable","DNI-Responsable","N-Horas"]
         with open("./Obligatorios-P3/db.csv", 'w', newline="") as File:
             writer = csv.DictWriter(File, fields_keys_list)
             writer.writeheader()
