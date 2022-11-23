@@ -16,7 +16,7 @@ print("\n")
 # Función para preguntar al usuario si quiere volver a jugar
 def play_again():
     salir = False
-    while salir == False:
+    while salir == False:  # lpaneque: while not salir
         respuesta = input("¿Quieres jugar otra vez?[Y/N]: ")
         if respuesta == "y" or respuesta == "Y":
             salir = True
@@ -81,6 +81,11 @@ def partida():
      / \\  |
           |
     =========''']
+    
+    # lpaneque: Las variables que creas dentro de una función son locales, esto quiere decir que cuando la función termina desaparecen. 
+    # Las variables que creas en el código de tu script fuera de las funciones son globales y son accesibles desde cualquier punto de tu script, incluso dentro de las funciones.
+    # Para crear variables globales, deberías hacerlo fuera de la función, antes de definir las funciones o justo después de las funciones.
+    
     # Se declaran las variables necesarias para que funcione
     global salida # Es la variable en la que se guarda el progreso del usuario en la palabra a adivinar (es la misma que en la función 'main')
     global palabra_a_adivinar # (es la misma que en la función 'main')
@@ -166,8 +171,10 @@ def main():
     palabra_sin_modificar = palabra_a_adivinar
     word_size = len(palabra_a_adivinar) # Se define el tamaño de la palabra
     letras_usadas = []
-    salida = "_" * word_size  # Se crea la variable que se le muestra al usuario como progreso
+    salida = "_" * word_size  # Se crea la variable que se le muestra al usuario como progreso # lpaneque: Great!
     partida()
     play_again()
 
 main()
+
+#lpaneque: Great!
