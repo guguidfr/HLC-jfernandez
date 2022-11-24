@@ -1,7 +1,7 @@
 # José Daniel Fernández López
 import csv
 import random
-
+'''
 # Ejercicio 1:
 mis_numeros = [] # Creamos vacía la lista contenedora de los números ganadores .
 for i in range(6):
@@ -54,18 +54,22 @@ print(f"Has acertado {aciertos} de 6 números.")
 print(f"Has acertado los números: {numeros_acertados}")
 print(f"Has fallado los números: {numeros_errados}")
 print("####################################") 
-
 '''
+
 # Ejercicio 2
 mi_csv = "./Examen1/peliculas.csv" # Guardamos la ubicación del csv en una variable
 cabeceras = ["titulo","anyo","genero","director"] # Declaramos las cabeceras del csv para usarlas más adelante
 peliculas = [] # Declaramos vacía la lista en la que guardaremos las líneas del csv
-with open(mi_csv,'r',newline="") as file: # Abrimos el csv y lo vamos guardando línea a lína
-    reader = csv.DictReader(file)
-    for linea in reader:
-        peliculas.append(linea)
-for elemento in peliculas: # Mostramos las películas y la información de cada una accediendo a cada clave del diccionario
-    print("Título:",elemento["titulo"],"- Director:",elemento["director"],"- Año:",elemento["anyo"],"- Género:",elemento["genero"])
+try: 
+    with open(mi_csv,'r',newline="") as file: # Abrimos el csv y lo vamos guardando línea a lína
+        reader = csv.DictReader(file)
+        for linea in reader:
+            peliculas.append(linea)
+except FileNotFoundError:
+    print("No se ha podido encontrar el archivo deseado.")
+else: 
+    for elemento in peliculas: # Mostramos las películas y la información de cada una accediendo a cada clave del diccionario
+        print("Título:",elemento["titulo"],"- Director:",elemento["director"],"- Año:",elemento["anyo"],"- Género:",elemento["genero"])
 
 # Ejercicio 3
 def nueva_pelicula(lista_de_peliculas):
@@ -91,4 +95,3 @@ with open(mi_csv,'w',newline="") as file: # Abrimos el csv...
     writer = csv.DictWriter(file, cabeceras) # ... le decimos a DictWriter qué archivo tiene que leer y cuáles son las cabeceras...
     writer.writeheader() # ... escribimos las cabeceras...
     writer.writerows(peliculas) # ... y finalmente las películas.
-'''
