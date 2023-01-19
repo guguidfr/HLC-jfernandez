@@ -35,5 +35,3 @@ class Ropa(ProductoGenerico):
         self.talla = talla
         self.tejido = tejido
         self.color = color
-        
-        
