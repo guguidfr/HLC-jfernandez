@@ -28,22 +28,25 @@ class Cliente:
             
             if tipo == "paypal": #type: ignore
                 self.metodos_pago[nombre_metodo] = MetodosPago.PayPal( #type: ignore
+                    nombre = nombre_metodo, #type: ignore
                     moneda = input("Introduce el tipo de moneda que usará tu cuenta de paypal: "),
-                    saldo_asociado = int(input("Introduce el saldo de tu cuenta de PayPal: ")), 
+                    saldo_asociado = float(input("Introduce el saldo de tu cuenta de PayPal: ")), 
                     usuario_pp = input("Introduce tu nombre de usuario de PayPal: "), 
                     region = input("Introduce la región de tu cuenta de PayPal: "))
             
             elif tipo == "bisum": #type: ignore
                 self.metodos_pago[nombre_metodo] = MetodosPago.Bisum( #type: ignore
+                    nombre = nombre_metodo, #type: ignore
                     moneda = input("Introduce el tipo de moneda que usarás con Bisum: "),
-                    saldo_asociado = int(input("Introduce el saldo que tienes en Bisum: ")), 
+                    saldo_asociado = float(input("Introduce el saldo que tienes en Bisum: ")), 
                     tlfn = input("Introduce el número de teléfono de tu Bisum: "), 
                     banco = input("Introduce el nombre de tu banco: ")) #type: ignore
             
             elif tipo == "tarjetadedebito": #type: ignore
                 self.metodos_pago[nombre_metodo] = MetodosPago.TarjetaDebito( #type: ignore
+                    nombre = nombre_metodo, #type: ignore
                     moneda = input("Introduce la moneda de la tajeta de débito: "),
-                    saldo_asociado = int(input("Introduce el saldo de la tarjeta de débito: ")), 
+                    saldo_asociado = float(input("Introduce el saldo de la tarjeta de débito: ")), 
                     titular = input("Introduce el nombre de la persona titular de la tarjeta de débito: "), 
                     numero = input("Introduce el número de la tarjeta de débito: "), 
                     cvv = input("Introduce el CVV de la tarjeta de débito: "), 
@@ -52,8 +55,9 @@ class Cliente:
             
             elif tipo == "tarjetadecredito": #type: ignore
                 self.metodos_pago[nombre_metodo] = MetodosPago.TarjetaCredito( #type: ignore
+                    nombre = nombre_metodo, #type: ignore
                     moneda = input("Introduce la moneda de la tajeta de crédito: "),
-                    saldo_asociado = int(input("Introduce el saldo de la tarjeta de crédito: ")), 
+                    saldo_asociado = float(input("Introduce el saldo de la tarjeta de crédito: ")), 
                     titular = input("Introduce el nombre de la persona titular de la tarjeta de crédito: "), 
                     numero = input("Introduce el número de la tarjeta de crédito: "), 
                     cvv = input("Introduce el CVV de la tarjeta de crédito: "), 
