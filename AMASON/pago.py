@@ -1,14 +1,14 @@
 import cliente
 class MetodoPago:
-    def __init__(self, nombre, moneda,saldo_asociado = 0):
+    def __init__(self, nombre, moneda, saldo_asociado = 0):
         self.nombre = nombre
         self.moneda = moneda
         self.saldo_asociado = saldo_asociado
 
-    '''    
+      
     def __str__(self):
         return self.nombre
-    '''
+    
     def pagar(self, cantidad):
         if self.saldo_asociado != 0 and self.saldo_asociado >= cantidad:
             self.saldo_asociado -= cantidad
