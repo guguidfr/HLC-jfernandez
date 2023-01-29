@@ -62,10 +62,13 @@ nombre = "tiktok.mp4" # Puedes poner el nombre que quieras al archivo. He probad
 ruta_completa = ruta + nombre # Esto es la ruta final más el nombre del archivo
 # ⚠️ Falta comprobar que la petición con el servidor sea correcta
 response = requests.get(f"{Descargar(url)}", stream=True) # Hacer la solicitud al enlace y obtener la información
-with open(ruta_completa, "wb") as video:
-    for bloque in response.iter_content(chunk_size=1024): # Obtener los bloques de 1024 bits (creo) del archivo que queremos descargar...
-        if bloque: # (si obtenemos un bloque)
-            video.write(bloque) # ...escribimos el bloque de bits.
+if response.status_code == 200:
+    with open(ruta_completa, "wb") as video:
+        for bloque in response.iter_content(chunk_size=1024): # Obtener los bloques de 1024 bits (creo) del archivo que queremos descargar...
+            if bloque: # (si obtenemos un bloque)
+                video.write(bloque) # ...escribimos el bloque de bits.
+else:
+        print(f"Error al acceder a la página. Código de error: {response.status_code}")
 # -----------------------------------------------------
 """
 El siguiente bloque de código debería funcionar, aunque no sé exactamente por qué no funciona (porque lo he probado varias veces antes y ha funcionado a la perfección)
