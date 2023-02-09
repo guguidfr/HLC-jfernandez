@@ -1,7 +1,7 @@
 import mariadb
 import sys
 
-# Connect to MariaDB Platform
+# Conectar a MariaDB
 try:
    conn = mariadb.connect(
        user="root",
@@ -17,7 +17,7 @@ except mariadb.Error as e:
    sys.exit(1)
 
 
-# Get Cursor
+# Crear el cursor
 cur = conn.cursor() # type: ignore
 cur.execute("select * from alumnos")
 for id, nombre, apellidos, email in cur:
