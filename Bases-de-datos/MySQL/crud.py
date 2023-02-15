@@ -1,43 +1,16 @@
 """
-Necesitarás tener "pip" instalado para que compruebe
 Este programa solamente funcionará para un servidor de base de datos MySQL
 y con una tabla que sea la siguiente:
 
     create table juegos(
-    ID int primary key,
+    ID char primary key,
     Nombre varchar(100),
     Desarrolladora varchar(100),
-    Pegi enum(3,7,12,16,18),
+    Pegi enum("3","7","12","16","18"),
     Fecha_salida date
     );
 
 """
-import subprocess
-import re
-def modules():
-    modulos_en_el_sistema = subprocess.check_output("pip freeze", shell=True).decode("utf-8")
-    modulos_instalados = [module.strip() for module in modulos_en_el_sistema.split('\n')]
-    modulos_necesarios = ["pymysql"]
-    modulos_cumplidos = [ re.sub("==[0-9.]*", "", x) for x in modulos_instalados if any(i in x for i in modulos_necesarios) ]
-    if len(modulos_cumplidos) == len(modulos_necesarios):
-        print("Están instalados todos los módulos necesarios.")
-    else:
-        print("Faltan módulos.")
-        for modulo in modulos_cumplidos:
-            if modulo in modulos_necesarios:
-                modulos_necesarios.remove(modulo)
-        print(f"Se van a instalar los siguientes módulos: {modulos_necesarios}")
-        try:
-            for modulo in modulos_necesarios:
-                subprocess.run(["pip", "install", modulo],shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        except:
-            print("No se han podido instalar los módulos modulos_necesarios.")
-
-try:
-    modules()
-except:
-    print("Ha habido un error al intentar instalar los módulos necesarios")
-    sys.exit(1)
 # --------------------------------------------------------------------------------
 import pymysql
 import sys
@@ -70,8 +43,8 @@ class DB:
         except pymysql.Error as db_e:
             print(f"Error al conectar a la base de datos: {db_e}")
             sys.exit(1)
-        else:
-            print("Conexión establecida.")
+        # else:
+        #     print("Conexión establecida.")
     
     def do_query(self, statement):
         """
@@ -120,7 +93,7 @@ class Actions(DB):
 
             elif field == "Nombre":
                 try:
-                    value = str(input("Introduce el nombre: "))
+                    value = input("Introduce el nombre: ")
                 except:
                     print("Entrada no válida.")
                 else:
@@ -128,7 +101,7 @@ class Actions(DB):
 
             elif field == "Desarrolladora":
                 try:
-                    value = str(input("Introduce el nombre de la desarrolladora: "))
+                    value = input("Introduce el nombre de la desarrolladora: ")
                 except:
                     print("Entrada no válida.")
                 else:
@@ -136,18 +109,18 @@ class Actions(DB):
             
             elif field == "Pegi":
                 try:
-                    value = int(input("Introduce el PEGI: "))
+                    value = str(input("Introduce el PEGI: "))
                 except:
                     print("Entrada no válida.")
                 else:
-                    if value not in (3,7,12,16,18):
+                    if value not in ("3","7","12","16","18"):
                         print("PEGI no válido.")
                     else:
                         correct = True
 
             elif field == "Fecha de salida":
                 try:
-                    value = datetime.date.fromisoformat(input("Introduce la fecha: "))
+                    value = str(datetime.date.fromisoformat(input("Introduce la fecha: ")))
                 except ValueError:
                     print("Formato de fecha no válido. Debe de ser: YYYY-MM-DD")
                 else:
@@ -171,10 +144,10 @@ class Actions(DB):
                     print(f"Debes de introducir un número entre 1 y {len(self.columns)}")
                 else:
                     exit = True
-        return option #type: ignore
+        return self.columns[option] #type: ignore
 
     def insert(self):
-        query = f"INSERT INTO juegos values({self.define_field_value("ID")},{self.define_field_value("Nombre")},{self.define_field_value("Desarrolladora")},{self.define_field_value("PEGI")},{self.define_field_value("Fecha de salida")})" #type: ignore
+        query = f"INSERT INTO juegos values({self.define_field_value('ID')},'{self.define_field_value('Nombre')}','{self.define_field_value('Desarrolladora')}','{self.define_field_value('Pegi')}','{self.define_field_value('Fecha de salida')}')" #type: ignore
         self.do_query(query)
 
     def select(self):
@@ -188,59 +161,28 @@ class Actions(DB):
                 exit = True
         if respuesta == 1: #type: ignore
             query = "SELECT * FROM juegos"
-            self.conn.cursor().execute(query) #type: ignore
-            for id, nombre, dev, pegi, date in self.conn.cursor().fetchall(): #type: ignore
+            cur = self.conn.cursor() #type: ignore
+            cur.execute(query) #type: ignore
+            for id, nombre, dev, pegi, date in cur.fetchall(): #type: ignore
                 print(f"ID: {id}, Nombre: {nombre}, Desarrolladora: {dev}, PEGI: {pegi}, Fecha de lanzamiento: {date}")
+        
         elif respuesta == 2: #type: ignore
-            # print("Estas son las columnas de la tabla: ")
-            # counter = 1
-            # for field in self.columns:
-            #     print(f" {counter} - {field}")
-            #     counter += 1
-            # exit = False
-            # while exit == False:
-            #     try:
-            #         option = int(input(f"Elige una de las opciones (1-{len(self.columns)}): "))-1
-            #     except:
-            #         print("Debes de introducir un número.")
-            #     else:
-            #         if 0>option or option>len(self.columns):
-            #             print(f"Debes de introducir un número entre 1 y {len(self.columns)}")
-            #         else:
-            #             exit = True
-
             print("Elige una de las columnas:")
             selected_column = self.select_column() #type: ignore
             print("Define el valor de la columna por la que quieres filtrar:")
             filter_value = self.define_field_value(selected_column)
-            query = f"SELECT * FROM juegos WHERE {selected_column}={filter_value}"
-            self.conn.cursor().execute(query) #type: ignore
-            for id, nombre, dev, pegi, date in self.conn.cursor().fetchall(): #type: ignore
+            query = f"SELECT * FROM juegos WHERE {selected_column}='{filter_value}'"
+            cur = self.conn.cursor() #type: ignore
+            cur.execute(query) #type: ignore
+            for id, nombre, dev, pegi, date in cur.fetchall(): #type: ignore
                 print(f"ID: {id}, Nombre: {nombre}, Desarrolladora: {dev}, PEGI: {pegi}, Fecha de lanzamiento: {date}")
-
-    def delete(self):
-        # print("Estas son las columnas de la tabla: ")
-        # counter = 1
-        # for field in self.columns:
-        #     print(f" {counter} - {field}")
-        #     counter += 1
-        # exit = False
-        # while exit == False:
-        #     try:
-        #         option = int(input(f"Elige una de las opciones (1-{len(self.columns)}): "))-1
-        #     except:
-        #         print("Debes de introducir un número.")
-        #     else:
-        #         if 0>option or option>len(self.columns):
-        #             print(f"Debes de introducir un número entre 1 y {len(self.columns)}")
-        #         else:
-        #             exit = True
         
+    def delete(self):
         print("Elige una de las columnas:")
         selected_column = self.select_column() #type: ignore
         print("Define el valor de la columna por la que quieres filtrar:")
         filter_value = self.define_field_value(selected_column)
-        query = f"DELETE FROM juegos WHERE {selected_column}={filter_value}"
+        query = f"DELETE FROM juegos WHERE {selected_column}='{filter_value}'"
         self.do_query(query)
 
     def update(self):
@@ -252,7 +194,7 @@ class Actions(DB):
         selected_column = self.select_column()
         print("Elige el nuevo valor para la columna seleccionada:")
         new_value = self.define_field_value(selected_column)
-        query = f"UPDATE TABLE juegos SET {selected_column}={new_value} WHERE {filter_column}={filter_value}"
+        query = f"UPDATE TABLE juegos SET {selected_column}='{new_value}' WHERE {filter_column}='{filter_value}'"
         self.do_query(query)
 
 # --------------------------------------------------------------------------------
@@ -261,7 +203,6 @@ class Actions(DB):
 # password = 'prueba'
 # database = 'pruebas'
 db_server = Actions("localhost","usu_prueba","pruebas","prueba")
-db_server.mysql_db_conn()
 print("Te doy la bienvenida al menú CRUD para MySQL.")
 input("Pulsa ENTER para continuar... ")
 while True:
@@ -271,13 +212,21 @@ while True:
         print("Tienes que introducir un número.")
     else:
         if opcion == 1:
+            db_server.mysql_db_conn()
             db_server.insert()
+            db_server.close_conn()
         elif opcion == 2:
+            db_server.mysql_db_conn()
             db_server.select()
+            db_server.close_conn()
         elif opcion == 3:
+            db_server.mysql_db_conn()
             db_server.delete()
+            db_server.close_conn()
         elif opcion == 4:
+            db_server.mysql_db_conn()
             db_server.update()
+            db_server.close_conn()
         elif opcion == 5:
             break
         else:
