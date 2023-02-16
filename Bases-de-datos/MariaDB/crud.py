@@ -4,6 +4,17 @@ port = 3306
 user = "py_user"
 database = "pruebas_py"
 password = "python"
+
+Tabla necesaria:
+
+    create table juegos(
+    ID char primary key,
+    Nombre varchar(100),
+    Desarrolladora varchar(100),
+    Pegi enum("3","7","12","16","18"),
+    Fecha_salida date
+    );
+    
 """
 import mariadb
 import sys
