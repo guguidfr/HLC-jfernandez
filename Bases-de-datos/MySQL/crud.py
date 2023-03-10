@@ -10,6 +10,7 @@ y con una tabla que sea la siguiente:
     Fecha_salida date
     );
 
+En mi caso, la librería "cryptography" es necesaria al usar MyQSL
 """
 # --------------------------------------------------------------------------------
 import pymysql
@@ -19,7 +20,7 @@ import datetime
 # hostname = 'localhost'
 # username = 'usu_prueba'
 # password = 'prueba'
-# database = 'pruebas'
+# database = 'pruebas_python'
 
 class DB:
     def __init__(self, host, user, database, password):
@@ -201,8 +202,8 @@ class Actions(DB):
 # hostname = 'localhost'
 # username = 'usu_prueba'
 # password = 'prueba'
-# database = 'pruebas'
-db_server = Actions("localhost","usu_prueba","pruebas","prueba")
+# database = 'pruebas_python'
+db_server = Actions("localhost","usu_prueba","pruebas_python","prueba")
 print("Te doy la bienvenida al menú CRUD para MySQL.")
 input("Pulsa ENTER para continuar... ")
 while True:
