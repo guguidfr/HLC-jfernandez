@@ -1,1 +1,1 @@
-to_dict
+add_book(book)
