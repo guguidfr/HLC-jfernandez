@@ -13,7 +13,7 @@ def get_all(genre = None, author = None):
     else:
         raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, 
-                detail=f"ERROR: No matches")
+                detail="ERROR: No matches")
 
 @app.get("/books/{pk}")
 def get_by_pk(pk):
@@ -32,7 +32,7 @@ def new_book(js = Body()):
         obj.add_book(book)
         return "New entry added successfully"
     except Exception:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=f"Error when trying to save the new entry") 
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Error when trying to save the new book") 
     
 @app.put("/books/{pk}")
 def update_book(pk, js = Body()):
@@ -42,10 +42,16 @@ def update_book(pk, js = Body()):
     except Exception:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, 
-            detail=f"Couldn't update book with id '{pk}' with '{js}'")
+            detail=f"Could not update book with id '{pk}' with '{js}'")
 
-# @app.delete("/books/{pk}", status_code=status.HTTP_204_NO_CONTENT)
-# def delte_book(pk):
+@app.delete("/books/{pk}", status_code=status.HTTP_204_NO_CONTENT)
+def delte_book(pk):
+    code = obj.delete_book(pk)
+    if code == 0:
+        return "Book deleted successfully"
+    else:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"There is no book with id={pk}")
+
 
 if __name__=="__main__":
     run(app, host="0.0.0.0", port=8000)

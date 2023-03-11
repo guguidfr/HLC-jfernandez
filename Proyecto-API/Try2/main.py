@@ -6,8 +6,8 @@ CREATE TABLE LIBROS(
 	ISBN CHAR(13) NOT NULL UNIQUE,
 	Titulo VARCHAR(100) NOT NULL,
 	Autor VARCHAR(100) NOT NULL,
-	Genero ENUM("Aventura","Fantasia","Ciencia-ficcion","Biografia") NOT NULL,
-	Fecha_salida DATE NOT NULL
+	Genero ENUM("Aventura","Fantasia","Ciencia-ficcion","Biografia"),
+	Fecha_salida DATE
 );
 
 INSERT INTO LIBROS (ISBN, Titulo, Autor, Genero, Fecha_salida) VALUES
