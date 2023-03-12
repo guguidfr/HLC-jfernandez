@@ -1,14 +1,14 @@
 DROP TABLE IF EXISTS LIBROS;
 CREATE TABLE LIBROS(
 	id INT AUTO_INCREMENT PRIMARY KEY,
-	ISBN CHAR(13) NOT NULL UNIQUE,
-	Titulo VARCHAR(100) NOT NULL,
-	Autor VARCHAR(100) NOT NULL,
-	Genero ENUM("Aventura","Fantasia","Ciencia-ficcion","Biografia") NOT NULL,
-	Fecha_salida DATE NOT NULL
+	isbn CHAR(13) NOT NULL UNIQUE,
+	title VARCHAR(100) NOT NULL,
+	author VARCHAR(100) NOT NULL,
+	genre ENUM("Aventura","Fantasia","Ciencia-ficcion","Biografia") NOT NULL,
+	release_date DATE NOT NULL
 );
 
-INSERT INTO LIBROS (ISBN, Titulo, Autor, Genero, Fecha_salida) VALUES
+INSERT INTO LIBROS (isbn, title, author, genre, release_date) VALUES
 ("9788498389369", "Harry Potter y la piedra filosofal", "J.K. Rowling", "Fantasia", "2001-01-01"),
 ("9788498389260", "Harry Potter y la cámara secreta", "J.K. Rowling", "Fantasia", "2002-01-01"),
 ("9788498389796", "Harry Potter y la Orden del Fénix", "J.K. Rowling", "Fantasia", "2003-01-01"),
