@@ -15,21 +15,29 @@ def get_all(genre = None, author = None):
                 status_code=status.HTTP_404_NOT_FOUND, 
                 detail="ERROR: No matches")
 
-@app.get("/books/{pk}")
-def get_by_pk(pk):
-    if book := obj.get_by_pk(pk):
-        return book
-    else:
-        raise HTTPException(
+@app.get("/books/{value}")
+def get_by_pk_or_isbn(value):
+    if len(value) == 13:
+        if book := obj.get_by_isbn(value):
+            print(book)
+            return book
+        else:
+            raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, 
-                detail=f"Book with id {pk} does not exists")
-
+                detail=f"Book with isbn={value} does not exists")
+    else:
+        if book := obj.get_by_pk(value):
+            return book
+        else:
+            raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND, 
+                    detail=f"Book with id={value} does not exists")
 
 @app.post("/books", status_code=status.HTTP_201_CREATED)
 def new_book(js = Body()):
     try:
         book = obj.js_to_book(js)
-        obj.add_book(book)
+        book.add_book()
         return "New entry added successfully"
     except Exception:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Error when trying to save the new book") 
@@ -37,7 +45,8 @@ def new_book(js = Body()):
 @app.put("/books/{pk}")
 def update_book(pk, js = Body()):
     try:
-        obj.update_book(pk,js)
+        book = obj.js_to_book(js)
+        book.update_book(pk)
         return "Record updated"
     except Exception:
         raise HTTPException(
@@ -50,8 +59,8 @@ def delte_book(pk):
     if code == 0:
         return "Book deleted successfully"
     else:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"There is no book with id={pk}")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"There is no book with id={pk}")
 
-
-if __name__=="__main__":
-    run(app, host="0.0.0.0", port=8000)
+run(app, host="0.0.0.0", port=8000)
