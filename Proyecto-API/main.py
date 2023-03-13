@@ -65,24 +65,36 @@ def select():
     # En cada caso, se pasan los bytes recibidos por el servidor a la función 'bytes_to_dataframe' para poder representar la información correctamente
     if option == 1: #type: ignore
         url = "http://localhost:8000/books"
-        bytes = re.get(url).content
-        bytes_to_dataframe(bytes)
+        if re.get(url).status_code == 404:
+            print("Sin datos")
+        else:
+            bytes = re.get(url).content
+            bytes_to_dataframe(bytes)
     elif option == 2: #type: ignore
         autor = input("Escribe el nombre del autor/autora por el que quieres filtrar: ").replace(" ", "+")
         url = f"http://localhost:8000/books?author={autor}"
-        bytes = re.get(url).content
-        bytes_to_dataframe(bytes)
+        if re.get(url).status_code == 404:
+            print("Sin datos")
+        else:
+            bytes = re.get(url).content
+            bytes_to_dataframe(bytes)
     elif option == 3: #type: ignore
         genero = input("Escribe el género por el que quieres filtrar: ").replace(" ", "+")
         url = f"http://localhost:8000/books?genre={genero}"
-        bytes = re.get(url).content
-        bytes_to_dataframe(bytes)
+        if re.get(url).status_code == 404:
+            print("Sin datos")
+        else:
+            bytes = re.get(url).content
+            bytes_to_dataframe(bytes)
     elif option == 4: #type: ignore
         autor = input("Escribe el nombre del autor/autora por el que quieres filtrar: ").replace(" ", "+")
         genero = input("Escribe el género por el que quieres filtrar: ").replace(" ", "+")
         url = f"http://localhost:8000/books?author={autor}&genre={genero}"
-        bytes = re.get(url).content
-        bytes_to_dataframe(bytes)
+        if re.get(url).status_code == 404:
+            print("Sin datos")
+        else:
+            bytes = re.get(url).content
+            bytes_to_dataframe(bytes)
     elif option == 5: #type: ignore
         valid_entry = False
         while not valid_entry:
@@ -93,8 +105,11 @@ def select():
             else:
                 valid_entry = True
         url = f"http://localhost:8000/books/{id}" #type: ignore
-        bytes = re.get(url).content
-        bytes_to_dataframe(bytes)
+        if re.get(url).status_code == 404:
+            print("Sin datos")
+        else:
+            bytes = re.get(url).content
+            bytes_to_dataframe(bytes)
     elif option == 6: #type: ignore
         valid_entry = False
         while not valid_entry:
@@ -104,8 +119,11 @@ def select():
             else:
                 print("El ISBN debe de ser un número de 13 dígitos")
         url = f"http://localhost:8000/books/{isbn}" #type: ignore
-        bytes = re.get(url).content
-        bytes_to_dataframe(bytes)
+        if re.get(url).status_code == 404:
+            print("Sin datos")
+        else:
+            bytes = re.get(url).content
+            bytes_to_dataframe(bytes)
 
 '''
 Se recorre la lista de columnas, y por cada una se pide al usuario lo necesario.
@@ -200,12 +218,12 @@ def update():
         except ValueError:
             print("Debes de introducir un número.")
         else:
-            valid_entry = True
-    url = f"http://localhost:8000/books/{id}" #type: ignore
-    if re.get(url).status_code == 404: # Se comprueba que el usuario ha elegido un libro existente. Si no hay coincidencias, se sale de la función
-        print("El id que has elegido no corresponde con ningún libro.")
-    else:
-        valid_entry = True
+            # valid_entry = True
+            url_check = f"http://localhost:8000/books/{id}" #type: ignore
+            if re.get(url=url_check).status_code == 404: # Se comprueba que el usuario ha elegido un libro existente. Si no hay coincidencias, se sale de la función
+                print("El id que has elegido no corresponde con ningún libro.")
+            elif re.get(url=url_check).status_code == 200:
+                valid_entry = True
     print("Puedes actualizar los valores: \n1. ISBN \n2. Título \n3. Autor \n4. Género \n5. Fecha de salida \nUsa (6) para salir y actualizar los datos.")
     update = False
     while not update:
@@ -225,11 +243,11 @@ def update():
             while not correct: 
                 new_isbn = str(input("Introduce un nuevo ISBN: "))
                 if new_isbn.isdigit() and len(new_isbn) == 13:
-                    url_new = f"http://localhost:8000/books/{new_isbn}"
-                    if re.get(url_new).status_code == 404: # Se comprueba si el ISBN que quiere poner el usuario esté libre. Si el error es 404 es que no hay coincidencias.
+                    check_isbn = f"http://localhost:8000/books/{new_isbn}"
+                    if re.get(url=check_isbn).status_code == 404: # Se comprueba si el ISBN que quiere poner el usuario esté libre. Si el error es 404 es que no hay coincidencias.
                         new_data["isbn"] = new_isbn
                         correct = True
-                    elif re.get(url).status_code == 200: # Si hay respuesta correcta respecto a ese ISBN, es que ya está en uso.
+                    elif re.get(url=check_isbn).status_code == 200: # Si hay respuesta correcta respecto a ese ISBN, es que ya está en uso.
                         print("El ISBN que has introducido no está disponible.")
         elif option == 2: #type: ignore
             correct = False
@@ -263,9 +281,11 @@ def update():
                     new_data["release_date"] = new_release_date
                     correct = True
         elif option == 6: #type: ignore
+            datos = json.dumps(new_data)
             # Cuando el usuario elige la opción 6, se manda la petición PUT al servidor con la información que ha ido añadiendo el usuario
-            url = f"http://localhost:8000/books/{id}" #type: ignore
-            re.put(url,data=json.dumps(new_data))
+            headers = {"Content-Type":"application/json"}
+            url_update = f"http://localhost:8000/books/{id}" #type: ignore
+            re.put(url=url_update,headers=headers,data=datos)
             update = True
             
          
@@ -303,3 +323,4 @@ if __name__ == '__main__':
             server.terminate()
             server.wait()
             time.sleep(2)
+            finish = True

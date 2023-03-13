@@ -56,7 +56,7 @@ class Book:
     def update_book(self,pk):
         old_book = get_by_pk(pk)[0]
         self.fill_none_values(old_book)
-        query = f'UPDATE LIBROS SET ISBN = "{self.isbn}", Titulo = "{self.title}", Autor = "{self.author}", Genero = "{self.genre}", Fecha_salida = "{self.release_date}" WHERE id = {int(pk)}'
+        query = f'UPDATE LIBROS SET isbn = "{self.isbn}", title = "{self.title}", author = "{self.author}", genre = "{self.genre}", release_date = "{self.release_date}" WHERE id = {int(pk)}'
         cursor = conn.cursor()
         cursor.execute(query)
         conn.commit()
@@ -132,4 +132,3 @@ def delete_book(pk):
     else:
         return 0
         # Se ha borrado la fila correcamente
-

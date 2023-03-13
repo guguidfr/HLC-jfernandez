@@ -63,12 +63,12 @@ def update_book(pk, js = Body()):
     try:
         book = obj.js_to_book(js)
         book.update_book(pk)
-        return "Record updated"
+        # return "Record updated"
+        return book
     except Exception:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, 
             detail=f"Could not update book with id '{pk}' with '{js}'")
-
 '''
 Se elige un libro mediante url.
 Se hace un delete a esa id; si se ha borrado correctamente, se muestra un mensaje; en el caso de no haber borrado nada (porque no existe ese libro), se devuelve el error 404
